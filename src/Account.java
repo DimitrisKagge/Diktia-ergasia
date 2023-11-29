@@ -16,4 +16,9 @@ public class Account {
         messageBox.add(m);
     }
 
+    public String getUsername(){
+        return username;
+    }
+
+
 }
