@@ -1,40 +1,36 @@
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
+import javax.xml.crypto.Data;
+import java.io.*;
+import java.net.*;
+
 
 public class MessagingServer {
-    private ServerSocket server;
+    private static BufferedReader in=null;
+    private static PrintWriter out=null;
+    public static void main(String[] args) throws IOException {
+        ServerSocket serverSocket = new ServerSocket(1000);
+        System.out.println("java server 1000");
 
-    public static final String Stop_String ="##";
+        while (true) {
+            Socket connectionSocket = serverSocket.accept();
+            new Thread(() -> {
 
-    public MessagingServer(){
-        try {
-            server=new ServerSocket(1000);
-            System.out.println("java server <1000>");
-            while(true)iniConnections();
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-    }
-
-    private void iniConnections() throws IOException{
-        Socket clientSocket=server.accept();
-        if(clientSocket.isConnected()) {
-            new Thread(()->{
-                ConnectedClient client = new ConnectedClient(clientSocket);
-                client.readMessages();
                 try {
-                    client.close();
+                    out=new PrintWriter(connectionSocket.getOutputStream(),true);
+                    in = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
+                    String line="";
+                    try{
+                         line=in.readLine();
+                        }catch (IOException e){
+                            e.printStackTrace();
+                        }
+                        System.out.println((line));
+
+                    connectionSocket.close();
+
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
             }).start();
         }
-
-    }
-
-
-    public static void main(String[] args){
-        new MessagingServer();
     }
 }
