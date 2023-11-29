@@ -62,6 +62,25 @@ public class MessagingServer {
                             out.flush();
                         }
 
+                    }else if(g.equals('2')){
+                        String[] sentence = line.split(" ");
+                        String auth = sentence[sentence.length - 1];
+                        Integer auth2=Integer.parseInt(auth);
+                        boolean flag=false;
+                        for(Integer c : authToken){
+                            if(c==auth2){
+                                flag=true;
+                            }
+                        }
+                        if(flag==true){
+                        out=new PrintWriter(connectionSocket.getOutputStream(),true);
+                        out.println(usernames);
+                        out.flush();
+                        }else{
+                            out=new PrintWriter(connectionSocket.getOutputStream(),true);
+                            out.println("Invalid Auth Token");
+                            out.flush();
+                        }
                     }
 
 

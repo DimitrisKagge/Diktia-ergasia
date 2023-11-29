@@ -18,16 +18,40 @@ public class MessagingClient {
         out.println(line);
         out.flush();
 
-
-        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        String rid = "";
-        try {
-            rid = in.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
+        Character g=line.charAt(27);
+        if(g.equals('1')) {
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            String rid = "";
+            try {
+                rid = in.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println(rid);
+        }else if(g.equals('2')){
+            BufferedReader in=new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            String rid = "";
+            try {
+                rid = in.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            int l=1;
+            if(rid.equals("Invalid Auth Token")){
+                System.out.println(rid);
+            }else {
+                rid = rid.replace("[", "");
+                rid = rid.replace("]", "");
+                rid = rid.replace(",", "");
+                for (String word : rid.split(" ")) {
+                    System.out.printf("%d %s%n", l, word);
+                    l++;
+                }
+            }
         }
-        System.out.println(rid);
+
         sc.close();
         socket.close();
+
     }
 }
