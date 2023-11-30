@@ -88,6 +88,15 @@ public class MessagingClient {
                 e.printStackTrace();
             }
             System.out.println(rid);
+        }else if(g.equals('6')){
+            BufferedReader in=new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            String rid = "";
+            try {
+                rid = in.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println(rid);
         }
 
         sc.close();

@@ -140,7 +140,11 @@ public class MessagingServer {
 
                             HashMap<Integer,String> name=new HashMap<Integer,String>();
                             for(Message a : accs.get(connect.get(auth2)).getMessageBox()){
-                                name.put(a.getId(),a.getSender()+"*");
+                                if(a.getIsRead()==false) {
+                                    name.put(a.getId(), a.getSender() + "*");
+                                }else{
+                                    name.put(a.getId(),a.getSender());
+                                }
                             }
                             out=new PrintWriter(connectionSocket.getOutputStream(),true);
                             out.println(name);
@@ -170,6 +174,7 @@ public class MessagingServer {
                                     fl=true;
                                     usn=r.getSender();
                                     mga=r.getBody();
+                                    r.setRead(true);
                                 }
                             }
                             if(fl==false){
@@ -181,6 +186,41 @@ public class MessagingServer {
                             out=new PrintWriter(connectionSocket.getOutputStream(),true);
                             out.println(h);
                             out.flush();
+                            }
+                        }
+                    }else if(g.equals('6')){
+                        String[] sentence = line.split(" ");
+                        String auth = sentence[sentence.length - 2];
+                        Integer auth2 = Integer.parseInt(auth);
+                        boolean flag = false;
+                        for (Integer c : authToken) {
+                            if (c == auth2) {
+                                flag = true;
+                            }
+                        }
+                        if (flag == false) {
+                            out = new PrintWriter(connectionSocket.getOutputStream(), true);
+                            out.println("Invalid Auth Token");
+                            out.flush();
+                        }else{
+                            int msgid=Integer.parseInt(sentence[sentence.length-1]);
+                            boolean fl=false;
+                            Message minim=null;
+                            for(Message r:accs.get(connect.get(auth2)).getMessageBox()){
+                                if(msgid==r.getId()){
+                                    fl=true;
+                                    minim=r;
+                                }
+                            }
+                            if(fl==false){
+                                out=new PrintWriter(connectionSocket.getOutputStream(),true);
+                                out.println("Message does not exist");
+                                out.flush();
+                            }else{
+                                accs.get(connect.get(auth2)).getMessageBox().remove(minim);
+                                out=new PrintWriter(connectionSocket.getOutputStream(),true);
+                                out.println("OK");
+                                out.flush();
                             }
                         }
                     }

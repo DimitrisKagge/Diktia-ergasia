@@ -23,4 +23,11 @@ public class Message {
     public int getId() {
         return id;
     }
+    public boolean getIsRead(){
+        return isRead;
+    }
+
+    public void setRead(boolean read) {
+        isRead = read;
+    }
 }
