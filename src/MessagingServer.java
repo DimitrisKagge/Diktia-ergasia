@@ -2,6 +2,7 @@ import javax.xml.crypto.Data;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -12,6 +13,8 @@ public class MessagingServer {
         ArrayList<String> usernames=new ArrayList<>();
         ArrayList<Integer>  authToken=new ArrayList<>();
         ArrayList<Account> users=new ArrayList<>();
+        HashMap<Integer,String> connect=new HashMap<Integer,String>();
+        HashMap<String,Account> accs=new HashMap<String,Account>();
 
         ServerSocket serverSocket = new ServerSocket(1000);
         System.out.println("java server 1000");
@@ -57,6 +60,8 @@ public class MessagingServer {
                             Account user=new Account(username,i);
                             users.add(user);
                             authToken.add(i);
+                            connect.put(i,username);
+                            accs.put(username,user);
                             out = new PrintWriter(connectionSocket.getOutputStream(), true);
                             out.println(i);
                             out.flush();
@@ -81,6 +86,39 @@ public class MessagingServer {
                             out.println("Invalid Auth Token");
                             out.flush();
                         }
+                    }else if (g.equals('3')){
+                        String[] sentence = line.split(" ");
+                        String auth = sentence[sentence.length - 3];
+                        Integer auth2=Integer.parseInt(auth);
+                        boolean flag=false;
+                        for(Integer c : authToken){
+                            if(c==auth2){
+                                flag=true;
+                            }
+                        }
+                        if(flag==false){
+                            out=new PrintWriter(connectionSocket.getOutputStream(),true);
+                            out.println("Invalid Auth Token");
+                            out.flush();
+                        }else{
+                            String mg=sentence[sentence.length-1];
+                            String ur=sentence[sentence.length-2];
+                            if(!usernames.contains(ur)){
+                                out=new PrintWriter(connectionSocket.getOutputStream(),true);
+                                out.println("User does not exist");
+                                out.flush();
+                            }else{
+                                Message m=new Message(false,connect.get(auth2),ur,mg);
+
+                                accs.get(ur).addMessage(m);
+                                out=new PrintWriter(connectionSocket.getOutputStream(),true);
+                                out.println("OK");
+                                out.flush();
+                            }
+
+                        }
+                    }else if(g.equals('4')){
+
                     }
 
 

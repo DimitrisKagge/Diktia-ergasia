@@ -48,6 +48,15 @@ public class MessagingClient {
                     l++;
                 }
             }
+        }else if(g.equals('3')){
+            BufferedReader in=new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            String rid = "";
+            try {
+                rid = in.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println(rid);
         }
 
         sc.close();
