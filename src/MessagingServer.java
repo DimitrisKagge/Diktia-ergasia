@@ -108,6 +108,7 @@ public class MessagingServer {
                                 out.println("User does not exist");
                                 out.flush();
                             }else{
+
                                 Message m=new Message(false,connect.get(auth2),ur,mg);
 
                                 accs.get(ur).addMessage(m);
@@ -117,10 +118,30 @@ public class MessagingServer {
                             }
 
                         }
-                    }else if(g.equals('4')){
-
+                    }else if(g.equals('4')) {
+                        String[] sentence = line.split(" ");
+                        String auth = sentence[sentence.length - 1];
+                        Integer auth2 = Integer.parseInt(auth);
+                        boolean flag = false;
+                        for (Integer c : authToken) {
+                            if (c == auth2) {
+                                flag = true;
+                            }
+                        }
+                        if (flag == false) {
+                            out = new PrintWriter(connectionSocket.getOutputStream(), true);
+                            out.println("Invalid Auth Token");
+                            out.flush();
+                        }else{
+                            ArrayList<String> name=new ArrayList<>();
+                            for(Message a : accs.get(connect.get(auth2)).getMessageBox()){
+                                name.add(a.getSender()+"*");
+                            }
+                            out=new PrintWriter(connectionSocket.getOutputStream(),true);
+                            out.println(name);
+                            out.flush();
+                        }
                     }
-
 
                     connectionSocket.close();
                 }catch (IOException e) {

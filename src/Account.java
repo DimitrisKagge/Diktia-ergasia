@@ -4,7 +4,7 @@ import java.util.List;
 public class Account {
     private String username;
     private int authToken;
-    private List<Message> messageBox;
+    private ArrayList<Message> messageBox;
 
     public Account(String username,int authToken){
         this.username=username;
@@ -19,6 +19,10 @@ public class Account {
     public String getUsername(){
         return username;
     }
+    public ArrayList<Message> getMessageBox(){
+        return messageBox;
+    }
+
 
 
 

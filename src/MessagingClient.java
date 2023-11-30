@@ -57,6 +57,27 @@ public class MessagingClient {
                 e.printStackTrace();
             }
             System.out.println(rid);
+        }else if(g.equals('4')){
+            BufferedReader in=new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            String rid = "";
+            try {
+                rid = in.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if(rid.equals("Invalid Auth Token")){
+                System.out.println(rid);
+            }else {
+                rid = rid.replace("[", "");
+                rid = rid.replace("]", "");
+                rid = rid.replace(",", "");
+                int l=0;
+                for (String word : rid.split(" ")) {
+                    System.out.printf("%d. from: %s%n", l, word);
+                    l++;
+                }
+
+            }
         }
 
         sc.close();
