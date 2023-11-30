@@ -4,6 +4,7 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class MessagingServer {
@@ -16,8 +17,10 @@ public class MessagingServer {
         HashMap<Integer,String> connect=new HashMap<Integer,String>();
         HashMap<String,Account> accs=new HashMap<String,Account>();
 
+
         ServerSocket serverSocket = new ServerSocket(1000);
         System.out.println("java server 1000");
+        final AtomicInteger count = new AtomicInteger();
         while (true) {
             Socket connectionSocket = serverSocket.accept();
             new Thread(() -> {
@@ -101,6 +104,7 @@ public class MessagingServer {
                             out.println("Invalid Auth Token");
                             out.flush();
                         }else{
+
                             String mg=sentence[sentence.length-1];
                             String ur=sentence[sentence.length-2];
                             if(!usernames.contains(ur)){
@@ -108,9 +112,9 @@ public class MessagingServer {
                                 out.println("User does not exist");
                                 out.flush();
                             }else{
-
-                                Message m=new Message(false,connect.get(auth2),ur,mg);
-
+                                int idg=count.intValue();
+                                Message m=new Message(false,connect.get(auth2),ur,mg,idg);
+                                count.getAndIncrement();
                                 accs.get(ur).addMessage(m);
                                 out=new PrintWriter(connectionSocket.getOutputStream(),true);
                                 out.println("OK");
@@ -133,13 +137,51 @@ public class MessagingServer {
                             out.println("Invalid Auth Token");
                             out.flush();
                         }else{
-                            ArrayList<String> name=new ArrayList<>();
+
+                            HashMap<Integer,String> name=new HashMap<Integer,String>();
                             for(Message a : accs.get(connect.get(auth2)).getMessageBox()){
-                                name.add(a.getSender()+"*");
+                                name.put(a.getId(),a.getSender()+"*");
                             }
                             out=new PrintWriter(connectionSocket.getOutputStream(),true);
                             out.println(name);
                             out.flush();
+                        }
+                    }else if (g.equals('5')){
+                        String[] sentence = line.split(" ");
+                        String auth = sentence[sentence.length - 2];
+                        Integer auth2 = Integer.parseInt(auth);
+                        boolean flag = false;
+                        for (Integer c : authToken) {
+                            if (c == auth2) {
+                                flag = true;
+                            }
+                        }
+                        if (flag == false) {
+                            out = new PrintWriter(connectionSocket.getOutputStream(), true);
+                            out.println("Invalid Auth Token");
+                            out.flush();
+                        }else{
+                            int msgid=Integer.parseInt(sentence[sentence.length-1]);
+                            boolean fl=false;
+                            String usn = null;
+                            String mga=null;
+                            for(Message r:accs.get(connect.get(auth2)).getMessageBox()){
+                                if(msgid==r.getId()){
+                                    fl=true;
+                                    usn=r.getSender();
+                                    mga=r.getBody();
+                                }
+                            }
+                            if(fl==false){
+                                out=new PrintWriter(connectionSocket.getOutputStream(),true);
+                                out.println("Message ID does not exist");
+                                out.flush();
+                            }else {
+                            String h="("+usn+")"+mga;
+                            out=new PrintWriter(connectionSocket.getOutputStream(),true);
+                            out.println(h);
+                            out.flush();
+                            }
                         }
                     }
 

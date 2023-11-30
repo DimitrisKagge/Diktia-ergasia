@@ -68,16 +68,26 @@ public class MessagingClient {
             if(rid.equals("Invalid Auth Token")){
                 System.out.println(rid);
             }else {
-                rid = rid.replace("[", "");
-                rid = rid.replace("]", "");
+                rid = rid.replace("{", "");
+                rid = rid.replace("}", "");
                 rid = rid.replace(",", "");
+                rid=rid.replace("=",".from-");
                 int l=0;
                 for (String word : rid.split(" ")) {
-                    System.out.printf("%d. from: %s%n", l, word);
+                    System.out.printf("%s%n", word);
                     l++;
                 }
 
             }
+        }else if(g.equals('5')){
+            BufferedReader in=new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            String rid = "";
+            try {
+                rid = in.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println(rid);
         }
 
         sc.close();
