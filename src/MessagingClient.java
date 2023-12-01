@@ -44,7 +44,7 @@ public class MessagingClient {
                 rid = rid.replace("]", "");
                 rid = rid.replace(",", "");
                 for (String word : rid.split(" ")) {
-                    System.out.printf("%d %s%n", l, word);
+                    System.out.printf("%d. %s%n", l, word);
                     l++;
                 }
             }
@@ -71,7 +71,7 @@ public class MessagingClient {
                 rid = rid.replace("{", "");
                 rid = rid.replace("}", "");
                 rid = rid.replace(",", "");
-                rid=rid.replace("=",".from-");
+                rid=rid.replace("=",".from:");
                 int l=0;
                 for (String word : rid.split(" ")) {
                     System.out.printf("%s%n", word);
@@ -79,7 +79,7 @@ public class MessagingClient {
                 }
 
             }
-        }else if(g.equals('5')){
+        }else if(g.equals(('5'))){
             BufferedReader in=new BufferedReader(new InputStreamReader(socket.getInputStream()));
             String rid = "";
             try {

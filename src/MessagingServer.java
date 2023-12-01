@@ -16,15 +16,14 @@ public class MessagingServer {
         ArrayList<Account> users=new ArrayList<>();
         HashMap<Integer,String> connect=new HashMap<Integer,String>();
         HashMap<String,Account> accs=new HashMap<String,Account>();
-
+        final AtomicInteger count = new AtomicInteger();
 
         ServerSocket serverSocket = new ServerSocket(1000);
         System.out.println("java server 1000");
-        final AtomicInteger count = new AtomicInteger();
+
         while (true) {
             Socket connectionSocket = serverSocket.accept();
             new Thread(() -> {
-
                 try {
                     in = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
                     String line = "";
@@ -33,7 +32,7 @@ public class MessagingServer {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    System.out.println((line));
+
 
                     Character g=line.charAt(27);
                     if (g.equals('1')) {
