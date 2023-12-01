@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="MessagingClient:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/MessagingClient_jar</output-path>
+    <root id="archive" name="Diktia ergasia.jar">
+      <element id="module-output" name="Diktia ergasia" />
+    </root>
+  </artifact>
+</component>
